@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.2 28">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #dbd0b4;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #9a927e;
+      }
+
+      .cls-3 {
+        fill: #aea694;
+      }
+
+      .cls-4 {
+        fill: #807a6d;
+      }
+
+      .cls-5 {
+        fill: #c6bca5;
+      }
+
+      .cls-6 {
+        fill: #38342a;
+      }
+
+      .cls-7 {
+        fill: #bcb29c;
+      }
+    </style>
+  </defs>
+  <path class="cls-6" d="m13.57,0v2h-1.94v4h-1.94v2h-1.94v2h-1.94v2h-1.94v2h-1.94v2H0v4h1.94v2h1.94v2h1.94v2h1.94v2h3.88v-2h1.94v-4h1.94v-2h1.94v-2h1.94v-2h3.88v-2h1.94v-4h-1.94v-2h-1.94v-2h-1.94v-2h-1.94v-2h-1.94V0h-1.94Z"/>
+  <path class="cls-1" d="m13.57,2v2h1.94v2h1.94v2h1.94v2h1.94v-2h-1.94v-2h-1.94v-2h-1.94v-2h-1.94Z"/>
+  <path class="cls-5" d="m13.57,4v2h1.94v-2h-1.94Z"/>
+  <path class="cls-1" d="m11.63,6v4h-3.88v2h-1.94v2h-1.94v4h1.94v2h1.94v2h3.88v-4h-1.94v-2h3.88v2h1.94v-4h-1.94v-2h3.88v-2h-1.94v-2h-1.94v-2h-1.94Z"/>
+  <path class="cls-6" d="m13.57,6v2h1.94v2h1.94v2h1.94v-2h-1.94v-2h-1.94v-2h-1.94Z"/>
+  <path class="cls-7" d="m15.51,6v2h1.94v-2h-1.94Z"/>
+  <path class="cls-5" d="m9.69,8v2h1.94v-2h-1.94Z"/>
+  <path class="cls-7" d="m17.45,8v2h1.94v-2h-1.94Z"/>
+  <path class="cls-5" d="m11.63,10v2h1.94v-2h-1.94Z"/>
+  <path class="cls-7" d="m19.39,10v2h1.94v-2h-1.94Z"/>
+  <path class="cls-5" d="m13.57,12v2h3.88v-2h-3.88Z"/>
+  <path class="cls-7" d="m17.45,12v2h-1.94v4h1.94v-2h1.94v-4h-1.94Z"/>
+  <path class="cls-4" d="m21.32,12v2h1.94v-2h-1.94Z"/>
+  <path class="cls-5" d="m7.75,14v2h1.94v-2h-1.94Z"/>
+  <path class="cls-3" d="m1.94,16v2h1.94v2h1.94v2h1.94v2h1.94v-2h-1.94v-2h-1.94v-2h-1.94v-2h-1.94Z"/>
+  <path class="cls-5" d="m9.69,16v2h3.88v-2h-3.88Z"/>
+  <path class="cls-2" d="m1.94,18v2h1.94v-2h-1.94Z"/>
+  <path class="cls-7" d="m11.63,18v4h1.94v-2h1.94v-2h-3.88Z"/>
+  <path class="cls-2" d="m3.88,20v2h1.94v-2h-1.94Zm1.94,2v2h1.94v-2h-1.94Z"/>
+  <path class="cls-7" d="m9.69,22v2h1.94v-2h-1.94Z"/>
+  <path class="cls-2" d="m7.75,24v2h1.94v-2h-1.94Z"/>
+</svg>
