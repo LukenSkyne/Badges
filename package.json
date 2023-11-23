@@ -1,0 +1,23 @@
+{
+	"name": "badges",
+	"version": "0.0.1",
+	"description": "",
+	"main": "dist/main.js",
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsc && node dist/main.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"canvas": "^2.11.2",
+		"dotenv": "^16.3.1",
+		"fastify": "^4.24.3"
+	},
+	"devDependencies": {
+		"@types/node": "^20.9.4",
+		"nodemon": "^3.0.1",
+		"typescript": "^5.3.2"
+	}
+}
