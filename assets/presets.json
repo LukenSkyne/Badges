@@ -1,0 +1,44 @@
+{
+	"custom": {
+		"icon": "platform",
+		"text": "Made by",
+		"name": "Luken",
+		"highlight": "eb9054",
+		"background": ["381b07", "211106"]
+	},
+	"modrinth": {
+		"icon": "modrinth",
+		"text": "{modrinth(id).downloads|num}[Available] on",
+		"name": "Modrinth",
+		"highlight": "00d845",
+		"background": ["072c13", "041c0b"]
+	},
+	"curseforge": {
+		"icon": "curseforge",
+		"text": "{curseforge(id).downloads.total|num}[Available] on",
+		"name": "CurseForge",
+		"highlight": "f16436",
+		"background": ["2e140b", "1e0c07"]
+	},
+	"fabric": {
+		"icon": "fabric",
+		"text": "Available for",
+		"name": "Fabric",
+		"highlight": "dbd0b4",
+		"background": ["2d2a24", "1e1c18"]
+	},
+	"forge": {
+		"icon": "forge",
+		"text": "Available for",
+		"name": "Forge",
+		"highlight": "dfa86a",
+		"background": ["251e17", "1b1610"]
+	},
+	"environment": {
+		"icon": "platform",
+		"text": "Required on",
+		"name": "Client & Server",
+		"highlight": "c92a45",
+		"background": ["4a0c16", "20060b"]
+	}
+}
