@@ -7,7 +7,7 @@ import { BadgeRenderer } from "./badge-renderer"
 const { HOST, PORT, BASE_URL } = process.env
 const server = fastify({ logger: true })
 
-server.get(BASE_URL + "/ping", async (request: FastifyRequest, reply: FastifyReply) => {
+server.get(BASE_URL + "/ping", async (_a: FastifyRequest, _b: FastifyReply) => {
 	return "pong"
 })
 
@@ -29,7 +29,7 @@ server.get(BASE_URL + "/:preset", async (request: PresetRequest, reply: FastifyR
 	return canvas.createPNGStream()
 })
 
-server.listen({ host: HOST, port: parseInt(PORT ?? "3000") }, (err) => {
+server.listen({ host: HOST, port: Number(PORT ?? "3000") }, (err) => {
 	if (err) {
 		console.error(err)
 		process.exit(1)
