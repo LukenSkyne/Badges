@@ -11,6 +11,10 @@ server.get(BASE_URL + "/ping", async (request: FastifyRequest, reply: FastifyRep
 	return "pong"
 })
 
+server.get(BASE_URL + "/favicon.ico", async (_: FastifyRequest, reply: FastifyReply) => {
+	reply.code(404)
+})
+
 server.get(BASE_URL + "/:preset", async (request: PresetRequest, reply: FastifyReply) => {
 	const presetName = request.params.preset
 
