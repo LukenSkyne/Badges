@@ -40,5 +40,60 @@
 		"icon": "platform",
 		"desc": "Required on",
 		"name": "Client & Server"
+	},
+	"github": {
+		"bg": ["181f29", "0f131a"],
+		"fill": "fff",
+		"icon": "github",
+		"desc": "Available on",
+		"name": "GitHub"
+	},
+	"gitlab": {
+		"bg": ["2e0e09", "1f1506"],
+		"fill": "eb9054",
+		"icon": "gitlab",
+		"desc": "Available on",
+		"name": [
+			{
+				"text": "GitLab",
+				"fill": [ "e06955", "f5b253" ]
+			}
+		]
+	},
+	"google-play": {
+		"bg": ["00171C", "0A1209", "100F06", "1A0000"],
+		"fill": "eb9054",
+		"icon": "google-play",
+		"desc": "Available On",
+		"name": [
+			{
+				"text": "Google Play",
+				"fill": {
+					"colors": [
+						"5991EE",
+						"56AB6C",
+						"F5D26A",
+						"EB786F"
+					],
+					"rotation": 0
+				}
+			}
+		]
+	},
+	"paypal": {
+		"bg": ["0e1b35", "0a1d25"],
+		"fill": "00a4ee",
+		"icon": "paypal",
+		"desc": "Support us on",
+		"name": [
+			{
+				"text": "Pay",
+				"fill": "0045D9"
+			},
+			{
+				"text": "Pal",
+				"fill": "00A4EE"
+			}
+		]
 	}
 }
