@@ -1,7 +1,7 @@
 import presets from "../assets/presets.json"
 
-const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)\]/
-const NAME_REGEX = /\[(?<fill>[\w|/-]+)\](?<text>(?:\\\[|[^\[])+)/g
+const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)]/
+const NAME_REGEX = /\[(?<fill>[\w|/-]+)](?<text>(?:\\\[|[^[])+)/g
 
 export class RequestParser {
 
