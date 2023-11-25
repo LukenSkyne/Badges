@@ -2,7 +2,7 @@ import presets from "../assets/presets.json"
 import { Color, Name, Params, Preset, PresetMap, Query, Token } from "./types"
 
 const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)\]/
-const NAME_REGEX = /(?:\[(?<fill>[\w|/-]+)\])(?<text>(?:\\\[|[^\[])+)/g
+const NAME_REGEX = /\[(?<fill>[\w|/-]+)\](?<text>(?:\\\[|[^\[])+)/g
 
 export class RequestParser {
 
@@ -14,11 +14,11 @@ export class RequestParser {
 		}
 
 		return {
-			bg: query.bg !== undefined ? RequestParser.transformColor(query.bg) : preset.bg,
+			bg: query.bg !== undefined ? this.transformColor(query.bg) : preset.bg,
 			icon: query.icon ?? preset.icon,
 			fill: query.fill ?? preset.fill,
-			desc: await RequestParser.transformDescription(query.desc ?? preset.desc, params.id),
-			name: query.name !== undefined ? RequestParser.transformName(query.name) : preset.name,
+			desc: await this.transformDescription(query.desc ?? preset.desc, params.id),
+			name: query.name !== undefined ? this.transformName(query.name) : preset.name,
 		}
 	}
 
@@ -53,14 +53,14 @@ export class RequestParser {
 			}
 
 			return {
-				fill: RequestParser.transformColor(match.groups.fill),
+				fill: this.transformColor(match.groups.fill),
 				text: match.groups.text,
 			} satisfies Token
 		})
 	}
 
 	private static async transformDescription(description: string, id?: string): Promise<string> {
-		const match = description.match(DESCRIPTION_REGEX)
+		const match = DESCRIPTION_REGEX.exec(description)
 
 		if (match === null || match.groups === undefined) {
 			return description
@@ -70,9 +70,9 @@ export class RequestParser {
 			return description.replace(DESCRIPTION_REGEX, match.groups.fallback)
 		}
 
-		const result = await RequestParser.fetchApi(match.groups.api, id, match.groups.path)
+		const result = await this.fetchApi(match.groups.api, id, match.groups.path)
 
-		return description.replace(DESCRIPTION_REGEX, RequestParser.applyFormat(result, match.groups.formatter))
+		return description.replace(DESCRIPTION_REGEX, this.applyFormat(result, match.groups.formatter))
 	}
 
 	private static async fetchApi(api: string, id: string, path: string) {
@@ -109,7 +109,7 @@ export class RequestParser {
 	private static applyFormat(input: any, formatter: string) {
 		switch (formatter) {
 			case "num": {
-				return RequestParser.formatNumber(input)
+				return this.formatNumber(input)
 			}
 		}
 
