@@ -1,7 +1,6 @@
 import "dotenv/config"
 import fastify, { FastifyReply, FastifyRequest } from "fastify"
 import { RequestParser } from "./request-parser"
-import { PresetRequest } from "./types"
 import { BadgeRenderer } from "./badge-renderer"
 
 const { HOST, PORT, BASE_URL } = process.env

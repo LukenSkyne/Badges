@@ -1,5 +1,4 @@
 import presets from "../assets/presets.json"
-import { Color, Name, Params, Preset, PresetMap, Query, Token } from "./types"
 
 const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)\]/
 const NAME_REGEX = /\[(?<fill>[\w|/-]+)\](?<text>(?:\\\[|[^\[])+)/g

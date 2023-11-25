@@ -1,6 +1,5 @@
 import { CanvasGradient, CanvasRenderingContext2D, createCanvas, loadImage, registerFont } from "canvas"
 import fs from "fs"
-import { Color, Gradient, Preset } from "./types"
 import { MathUtils } from "./math-utils"
 import { Vec2d } from "./vec-2d"
 
