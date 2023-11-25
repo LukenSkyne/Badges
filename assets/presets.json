@@ -1,44 +1,44 @@
 {
 	"custom": {
-		"icon": "platform",
-		"text": "Made by",
-		"name": "Luken",
-		"highlight": "eb9054",
-		"background": ["381b07", "211106"]
+		"bg": ["181f29", "0f131a"],
+		"fill": "fff",
+		"icon": "github",
+		"desc": "Made by",
+		"name": "Luken"
 	},
 	"modrinth": {
+		"bg": ["072c13", "041c0b"],
+		"fill": "00d845",
 		"icon": "modrinth",
-		"text": "{modrinth(id).downloads|num}[Available] on",
-		"name": "Modrinth",
-		"highlight": "00d845",
-		"background": ["072c13", "041c0b"]
+		"desc": "{modrinth.downloads|num}[Available] on",
+		"name": "Modrinth"
 	},
 	"curseforge": {
+		"bg": ["2e140b", "1e0c07"],
+		"fill": "f16436",
 		"icon": "curseforge",
-		"text": "{curseforge(id).downloads.total|num}[Available] on",
-		"name": "CurseForge",
-		"highlight": "f16436",
-		"background": ["2e140b", "1e0c07"]
+		"desc": "{curseforge.downloads.total|num}[Available] on",
+		"name": "CurseForge"
 	},
 	"fabric": {
+		"bg": ["2d2a24", "1e1c18"],
+		"fill": "dbd0b4",
 		"icon": "fabric",
-		"text": "Available for",
-		"name": "Fabric",
-		"highlight": "dbd0b4",
-		"background": ["2d2a24", "1e1c18"]
+		"desc": "Available for",
+		"name": "Fabric"
 	},
 	"forge": {
+		"bg": ["251e17", "1b1610"],
+		"fill": "dfa86a",
 		"icon": "forge",
-		"text": "Available for",
-		"name": "Forge",
-		"highlight": "dfa86a",
-		"background": ["251e17", "1b1610"]
+		"desc": "Available for",
+		"name": "Forge"
 	},
 	"environment": {
+		"bg": ["4a0c16", "20060b"],
+		"fill": "c92a45",
 		"icon": "platform",
-		"text": "Required on",
-		"name": "Client & Server",
-		"highlight": "c92a45",
-		"background": ["4a0c16", "20060b"]
+		"desc": "Required on",
+		"name": "Client & Server"
 	}
 }

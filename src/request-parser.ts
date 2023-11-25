@@ -1,59 +1,96 @@
 import presets from "../assets/presets.json"
-import { Preset, PresetMap, Query } from "./types"
+import { Color, Name, Params, Preset, PresetMap, Query, Token } from "./types"
+
+const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)\]/
+const NAME_REGEX = /(?:\[(?<fill>[\w|/-]+)\])(?<text>(?:\\\[|[^\[])+)/g
 
 export class RequestParser {
 
-	static async process(presetName: string, query: Query): Promise<Preset> {
-		const preset = (presets as PresetMap)[presetName]
+	static async process(params: Params, query: Query): Promise<Preset> {
+		const preset = (presets as PresetMap)[params.preset]
 
 		if (preset === undefined) {
 			throw new Error("unknown preset")
 		}
 
 		return {
+			bg: query.bg !== undefined ? RequestParser.transformColor(query.bg) : preset.bg,
 			icon: query.icon ?? preset.icon,
-			text: await RequestParser.transformDescription(query.text ?? preset.text, query),
-			name: query.name ?? preset.name,
-			highlight: query.highlight ?? preset.highlight,
-			background: query.background?.split(">") ?? preset.background,
+			fill: query.fill ?? preset.fill,
+			desc: await RequestParser.transformDescription(query.desc ?? preset.desc, params.id),
+			name: query.name !== undefined ? RequestParser.transformName(query.name) : preset.name,
 		}
 	}
 
-	private static async transformDescription(format: string, query: Query): Promise<string> {
-		const formatRegex = /{(?<api>\w+)\((?<param>[A-Za-z0-9]*)\)(?<path>[.\w]+)?(?:\|(?<format>\w+))?}\[(?<fallback>\w*)\]/
-		const match = format.match(formatRegex)
+	private static transformColor(colorFormat: string): Color {
+		const [gradient, rotation] = colorFormat.split("/")
+		const colors = gradient.split("|")
+
+		if (colors.length < 2) {
+			return colors[0]
+		}
+
+		if (rotation === undefined) {
+			return colors
+		}
+
+		return {
+			colors,
+			rotation: Number(rotation),
+		}
+	}
+
+	private static transformName(name: string): Name {
+		const matches = [...name.matchAll(NAME_REGEX)]
+
+		if (matches.length === 0) {
+			return name
+		}
+
+		return matches.map((match) => {
+			if (match.groups === undefined) {
+				throw new Error("NAME_REGEX_INVALID_MATCH")
+			}
+
+			return {
+				fill: RequestParser.transformColor(match.groups.fill),
+				text: match.groups.text,
+			} satisfies Token
+		})
+	}
+
+	private static async transformDescription(description: string, id?: string): Promise<string> {
+		const match = description.match(DESCRIPTION_REGEX)
 
 		if (match === null || match.groups === undefined) {
-			return format
+			return description
 		}
 
-		const param = match.groups.param
-
-		if (!Object.hasOwn(query, param)) {
-			return format.replace(formatRegex, match.groups.fallback)
+		if (id === undefined) {
+			return description.replace(DESCRIPTION_REGEX, match.groups.fallback)
 		}
 
-		const result = await RequestParser.fetchApi(match.groups.api, query[param], match.groups.path)
+		const result = await RequestParser.fetchApi(match.groups.api, id, match.groups.path)
 
-		return format.replace(formatRegex, RequestParser.applyFormat(result, match.groups.format))
+		return description.replace(DESCRIPTION_REGEX, RequestParser.applyFormat(result, match.groups.formatter))
 	}
 
-	private static async fetchApi(api: string, param: string, path: string) {
+	private static async fetchApi(api: string, id: string, path: string) {
 		const pathArr = path.split(".").slice(1)
 		let data
 
-		if (param === undefined) {
+		if (id === undefined) {
 			return "NO_PARAM"
 		}
 
 		// TODO: handle failed response
 		switch (api) {
 			case "modrinth": {
-				const response = await fetch(`https://api.modrinth.com/v2/project/${param}`)
+				const response = await fetch(`https://api.modrinth.com/v2/project/${id}`)
 				data = await response.json()
 			} break
 			case "curseforge": {
-				const response = await fetch(`https://api.cfwidget.com/${param}`)
+				const response = await fetch(`https://api.cfwidget.com/${id}`)
 				data = await response.json()
 			} break
 		}
@@ -69,21 +106,21 @@ export class RequestParser {
 		return data
 	}
 
-	private static applyFormat(whatever: any, format: string) {
-		switch (format) {
+	private static applyFormat(input: any, formatter: string) {
+		switch (formatter) {
 			case "num": {
-				return RequestParser.formatNumber(whatever)
+				return RequestParser.formatNumber(input)
 			}
 		}
 
-		return whatever
+		return input
 	}
 
 	private static formatNumber(num: number) {
 		if (num >= 1000000) {
 			return (num / 1000000).toFixed(1) + "M"
 		} else if (num >= 1000) {
-			return (num / 1000).toFixed(0) + "k"
+			return (num / 1000).toFixed(1) + "k"
 		}
 
 		return num.toString()

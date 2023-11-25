@@ -15,12 +15,9 @@ server.get(BASE_URL + "/favicon.ico", async (_: FastifyRequest, reply: FastifyRe
 	reply.code(404)
 })
 
-server.get(BASE_URL + "/:preset", async (request: PresetRequest, reply: FastifyReply) => {
-	const presetName = request.params.preset
-
-	const preset = await RequestParser.process(presetName, request.query)
-
-	console.log("preset", preset)
+server.get(BASE_URL + "/:preset/:id?", async (request: PresetRequest, reply: FastifyReply) => {
+	const preset = await RequestParser.process(request.params, request.query)
+	console.dir(preset, { depth: null })
 
 	const canvas = await BadgeRenderer.render(preset)
 
