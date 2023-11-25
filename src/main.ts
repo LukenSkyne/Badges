@@ -6,8 +6,8 @@ import { BadgeRenderer } from "./badge-renderer"
 const { HOST, PORT, BASE_URL } = process.env
 const server = fastify({ logger: true })
 
-server.get(BASE_URL + "/ping", async (_a: FastifyRequest, _b: FastifyReply) => {
-	return "pong"
+server.get(BASE_URL + "/", async (_a: FastifyRequest, _b: FastifyReply) => {
+	return "Hello o7"
 })
 
 server.get(BASE_URL + "/favicon.ico", async (_: FastifyRequest, reply: FastifyReply) => {
