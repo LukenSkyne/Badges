@@ -6,9 +6,15 @@ import { BadgeRenderer } from "./badge-renderer"
 const { HOST, PORT, BASE_URL } = process.env
 const server = fastify({ logger: true })
 
-server.get(BASE_URL + "/", async (_a: FastifyRequest, _b: FastifyReply) => {
+async function baseRoute(_a: FastifyRequest, _b: FastifyReply) {
 	return "Hello o7"
-})
+}
+
+if (BASE_URL !== undefined && BASE_URL !== "") {
+	server.get(BASE_URL, baseRoute)
+}
+
+server.get(BASE_URL + "/", baseRoute)
 
 server.get(BASE_URL + "/favicon.ico", async (_: FastifyRequest, reply: FastifyReply) => {
 	reply.code(404)
