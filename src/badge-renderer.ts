@@ -37,114 +37,91 @@ export class BadgeRenderer {
 
 	static async render(preset: Preset) {
 		const scale = 1
+		
+		const size = 40 * scale
+		const gap = 6 * scale
+		const margin = 8 * scale
+		const fontSize = 17 * scale
+		const iconSize = size - (gap * 2)
+		const fontMedium = `${fontSize}px Inter Medium`
+		const fontExtraBold = `${fontSize}px Inter ExtraBold`
 
-		let width = 40 * scale
-		const height = 40 * scale
+		let svgContent = fs.readFileSync(`./assets/icons/${preset.icon}.svg`, "utf8")
+		svgContent = svgContent.replace(/currentColor/g, `#${preset.fill}`)
+
+		const icon = await loadImage(`data:image/svg+xml;utf8,${svgContent}`)
+		icon.width *= scale
+		icon.height *= scale
+		const mult = iconSize / Math.max(icon.width, icon.height)
+		icon.width *= mult
+		icon.height *= mult
 
 		const text = preset.desc
 		const text2 = Array.isArray(preset.name) ? preset.name.map((tok) => tok.text).join("") : preset.name
 
-
 		const tokens = Array.isArray(preset.name) ? preset.name.map((tok) => ({
 			text: tok.text,
 			fill: tok.fill,
-			metrics: BadgeRenderer.measureText("17px Inter ExtraBold", tok.text),
+			metrics: BadgeRenderer.measureText(fontExtraBold, tok.text),
 		})) : [{
 			text: preset.name,
 			fill: preset.fill,
-			metrics: BadgeRenderer.measureText("17px Inter ExtraBold", text2),
+			metrics: BadgeRenderer.measureText(fontExtraBold, text2),
 		}]
 
-		const metrics = BadgeRenderer.measureText("17px Inter Medium", text)
-		const metrics2 = BadgeRenderer.measureText("17px Inter ExtraBold", text2)
+		const metrics = BadgeRenderer.measureText(fontMedium, text)
+		const metrics2 = BadgeRenderer.measureText(fontExtraBold, text2)
 
-		width += Math.round(metrics.width) + (6 * scale) + Math.round(metrics2.width) + (8 * scale)
+		const width = margin + icon.width + gap + Math.round(metrics.width) + gap + Math.round(metrics2.width) + margin
 
-		const canvas = createCanvas(width, height)
+		const canvas = createCanvas(width, size)
 		const ctx = canvas.getContext("2d")
 		{
-			const grd = BadgeRenderer.buildGradient(ctx, preset.bg, 0, 0, width, height)
+			const grd = BadgeRenderer.buildGradient(ctx, preset.bg, 0, 0, width, size)
 
-			const size = height
+			// bg
 			const cornerRadius = 8 * scale
 			ctx.beginPath()
-			ctx.roundRect(0, 0, width, height, cornerRadius)
+			ctx.roundRect(0, 0, width, size, cornerRadius)
 			ctx.fillStyle = grd
 			ctx.fill()
 
+			// border
 			const sw = 2.1 * scale
 			ctx.beginPath()
-			ctx.roundRect(sw * 0.5, sw * 0.5, width - sw, height - sw, cornerRadius - sw * 0.5)
+			ctx.roundRect(sw * 0.5, sw * 0.5, width - sw, size - sw, cornerRadius - sw * 0.5)
 			ctx.strokeStyle = "#ffffff26"
 			ctx.lineWidth = sw
 			ctx.stroke()
 
+			// icon
+			ctx.drawImage(icon, margin, gap + Math.round((iconSize - icon.height) * 0.5), icon.width, icon.height)
 
-			const pad = 6 * scale
-			//ctx.beginPath()
-			//ctx.fillStyle = "gray"
-			//ctx.rect(pad, pad, height - pad * 2, height - pad * 2)
-			//ctx.fill()
-
-			ctx.font = "17px Inter Medium"
+			// desc
+			const descOffX = margin + icon.width + gap
+			ctx.font = fontMedium
 			ctx.fillStyle = "#e8e8e8"
 			ctx.textAlign = "left"
 			ctx.textBaseline = "middle"
-			ctx.fillText(text, height, height * 0.5)
+			ctx.fillText(text, descOffX, size * 0.5)
 
-			ctx.font = "17px Inter ExtraBold"
-			//ctx.fillStyle = "#f16436"
-			ctx.fillStyle = `#${preset.fill}`
-			ctx.textAlign = "left"
-			ctx.textBaseline = "middle"
-			//ctx.fillText(text2, height + (6 * scale) + Math.round(metrics.width), height * 0.5)
+			// name
+			let xOff = descOffX + gap + Math.round(metrics.width)
+			ctx.font = fontExtraBold
 
-
-			let xOff = height + (6 * scale) + Math.round(metrics.width)
-
-			for (const tok of tokens) {
-				const tokGradient = BadgeRenderer.buildGradient(
+			for (const token of tokens) {
+				ctx.fillStyle = BadgeRenderer.buildGradient(
 					ctx,
-					tok.fill,
+					token.fill,
 					xOff,
-					height * 0.5 - 17 * 0.5,
-					tok.metrics.width,
-					17
+					size * 0.5 - fontSize * 0.5,
+					token.metrics.width,
+					fontSize
 				)
+				ctx.fillText(token.text, xOff, size * 0.5)
 
-				/*
-				ctx.fillStyle = "#f00a"
-				ctx.fillRect(xOff,
-					height * 0.5 - 17 * 0.5,
-					tok.metrics.width,
-					17)
-				*/
-
-				ctx.fillStyle = tokGradient
-				ctx.fillText(tok.text, xOff, height * 0.5)
-
-				xOff += tok.metrics.width
+				xOff += token.metrics.width
 			}
-
-			//ctx.drawImage(svgImage, 0, 0, 200, 200)
-
-			let svgContent = fs.readFileSync(`./assets/icons/${preset.icon}.svg`, "utf8")
-			svgContent = svgContent.replace(/currentColor/g, `#${preset.fill}`)
-
-			const svg = await loadImage(`data:image/svg+xml;utf8,${svgContent}`)
-			const iconSize = height - pad * 2
-
-			svg.width = svg.width * scale
-			svg.height = svg.height * scale
-
-			const mult = iconSize / Math.max(svg.width, svg.height)
-			svg.width *= mult
-			svg.height *= mult
-
-			ctx.drawImage(svg, Math.round(pad + (iconSize - svg.width) * 0.5), Math.round(pad + (iconSize - svg.height) * 0.5), svg.width, svg.height)
-
-			//ctx.fillStyle = "#fffa"
-			//ctx.fillRect(Math.round(pad + (iconSize - svg.width) * 0.5), Math.round(pad + (iconSize - svg.height) * 0.5), svg.width, svg.height)
 		}
 
 		return canvas
