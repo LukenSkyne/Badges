@@ -6,6 +6,11 @@ import { BadgeRenderer } from "./badge-renderer"
 const { HOST, PORT, BASE_URL } = process.env
 const server = fastify({ logger: true })
 
+server.register(import("@fastify/rate-limit"), {
+	max: 100,
+	timeWindow: 6e4,
+})
+
 server.register(async (s, _) => {
 	s.get("/", (_a: FastifyRequest, _b: FastifyReply) => {
 		return "Hello o7"
