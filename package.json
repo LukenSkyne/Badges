@@ -9,6 +9,7 @@
 	},
 	"keywords": [],
 	"author": "Luken",
+	"repository": "github:LukenSkyne/Badges",
 	"license": "MIT",
 	"dependencies": {
 		"@fastify/rate-limit": "^9.0.0",
