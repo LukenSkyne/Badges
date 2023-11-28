@@ -1,10 +1,13 @@
 import "dotenv/config"
 import fastify, { FastifyReply, FastifyRequest } from "fastify"
+import { CacheManager, CACHE_DURATION } from "./cache-manager"
 import { RequestParser } from "./request-parser"
 import { BadgeRenderer } from "./badge-renderer"
 
 const { HOST, PORT, BASE_URL } = process.env
 const server = fastify({ logger: true })
+
+setInterval(CacheManager.purge, CACHE_DURATION)
 
 server.register(import("@fastify/rate-limit"), {
 	max: 100,
