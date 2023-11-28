@@ -1,7 +1,11 @@
 import presets from "../assets/presets.json"
+import { ApiClient } from "./api-client"
 
 const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)]/
 const NAME_REGEX = /\[(?<fill>[\w|/-]+)](?<text>(?:\\\[|[^[])+)/g
+
+const modrinth = new ApiClient("https://api.modrinth.com/v2")
+const cfwidget = new ApiClient("https://api.cfwidget.com")
 
 export class RequestParser {
 
@@ -82,16 +86,21 @@ export class RequestParser {
 			return "NO_PARAM"
 		}
 
-		// TODO: handle failed response
 		switch (api) {
-			case "modrinth": {
-				const response = await fetch(`https://api.modrinth.com/v2/project/${id}`)
-				data = await response.json()
-			} break
-			case "curseforge": {
-				const response = await fetch(`https://api.cfwidget.com/${id}`)
-				data = await response.json()
-			} break
+			case "modrinth":
+				data = await modrinth.get(`/project/${id}`)
+
+				if (data === null) {
+					return "PROJECT_NOT_FOUND"
+				}
+				break
+			case "curseforge":
+				data = await cfwidget.get(`/${id}`)
+
+				if (data === null) {
+					return "PROJECT_NOT_FOUND"
+				}
+				break
 		}
 
 		for (const p of pathArr) {
