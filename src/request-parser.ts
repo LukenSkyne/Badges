@@ -4,9 +4,6 @@ import { ApiClient } from "./api-client"
 const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)]/
 const NAME_REGEX = /\[(?<fill>[\w|/-]+)](?<text>(?:\\\[|[^[])+)/g
 
-const modrinth = new ApiClient("https://api.modrinth.com/v2")
-const cfwidget = new ApiClient("https://api.cfwidget.com")
-
 export class RequestParser {
 
 	static async process(params: Params, query: Query): Promise<Preset> {
@@ -88,14 +85,14 @@ export class RequestParser {
 
 		switch (api) {
 			case "modrinth":
-				data = await modrinth.get(`/project/${id}`)
+				data = await ApiClient.Modrinth.get(`/project/${id}`)
 
 				if (data === null) {
 					return "PROJECT_NOT_FOUND"
 				}
 				break
 			case "curseforge":
-				data = await cfwidget.get(`/${id}`)
+				data = await ApiClient.CurseForge.get(`/${id}`)
 
 				if (data === null) {
 					return "PROJECT_NOT_FOUND"
@@ -125,8 +122,8 @@ export class RequestParser {
 	}
 
 	private static formatNumber(num: number) {
-		if (num >= 1000000) {
-			return (num / 1000000).toFixed(1) + "M"
+		if (num >= 1_000_000) {
+			return (num / 1_000_000).toFixed(1) + "M"
 		} else if (num >= 1000) {
 			return (num / 1000).toFixed(1) + "k"
 		}
