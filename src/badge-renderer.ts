@@ -11,30 +11,6 @@ registerFont("./assets/fonts/Inter-ExtraBold.ttf", { family: "Inter ExtraBold" }
 
 export class BadgeRenderer {
 
-	private static buildGradient(ctx: CanvasRenderingContext2D, color: Color, x: number, y: number, width: number, height: number): string | CanvasGradient {
-		const colors = (color as Gradient).colors ?? color
-
-		if (!Array.isArray(colors)) {
-			return `#${colors}`
-		}
-
-		const rotation = MathUtils.toRad((color as Gradient).rotation ?? 90)
-
-		const pos = new Vec2d(x, y)
-		const dimensions = new Vec2d(width, height)
-		const center = pos.add(dimensions.mult(0.5))
-
-		const gradientStop = MathUtils.calculateAngledCornerIntersection(pos, dimensions, rotation)
-		const gradientStart = center.mult(2).sub(gradientStop)
-		const grd = ctx.createLinearGradient(gradientStart.x, gradientStart.y, gradientStop.x, gradientStop.y)
-
-		for (let i = 0; i < colors.length; ++i) {
-			grd.addColorStop(i / (colors.length - 1), `#${colors[i]}`)
-		}
-
-		return grd
-	}
-
 	static async render(preset: Preset) {
 		const scale = 1
 		
@@ -130,5 +106,29 @@ export class BadgeRenderer {
 	private static measureText(font: string, text: string) {
 		dummyCtx.font = font
 		return dummyCtx.measureText(text)
+	}
+
+	private static buildGradient(ctx: CanvasRenderingContext2D, color: Color, x: number, y: number, width: number, height: number): string | CanvasGradient {
+		const colors = (color as Gradient).colors ?? color
+
+		if (!Array.isArray(colors)) {
+			return `#${colors}`
+		}
+
+		const rotation = MathUtils.toRad((color as Gradient).rotation ?? 90)
+
+		const pos = new Vec2d(x, y)
+		const dimensions = new Vec2d(width, height)
+		const center = pos.add(dimensions.mult(0.5))
+
+		const gradientStop = MathUtils.calculateAngledCornerIntersection(pos, dimensions, rotation)
+		const gradientStart = center.mult(2).sub(gradientStop)
+		const grd = ctx.createLinearGradient(gradientStart.x, gradientStart.y, gradientStop.x, gradientStop.y)
+
+		for (let i = 0; i < colors.length; ++i) {
+			grd.addColorStop(i / (colors.length - 1), `#${colors[i]}`)
+		}
+
+		return grd
 	}
 }
