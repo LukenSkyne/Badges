@@ -95,11 +95,11 @@ export class RequestParser {
 		}
 
 		for (const p of pathArr) {
-			if (data === undefined) {
-				return "OUT_OF_JSON"
-			}
-
 			data = data[p]
+
+			if (data === undefined) {
+				return "JSON_PATH_INVALID"
+			}
 		}
 
 		return data
