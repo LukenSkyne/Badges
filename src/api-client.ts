@@ -23,7 +23,7 @@ export class ApiClient {
 	}
 
 	async get(path: string) {
-		const cachedResult = CacheManager.get(path)
+		const cachedResult = CacheManager.get(this.baseUrl + path)
 
 		if (cachedResult !== null) {
 			return cachedResult
@@ -47,7 +47,7 @@ export class ApiClient {
 		}
 
 		const json = await response.json()
-		CacheManager.set(path, JSON.stringify(json))
+		CacheManager.set(this.baseUrl + path, JSON.stringify(json))
 
 		return json
 	}
