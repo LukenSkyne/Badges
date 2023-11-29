@@ -34,7 +34,7 @@ export class ApiClient {
 			throw new Error("third-party rate-limit reached")
 		}
 
-		const response = await fetch(`${this.baseUrl}${path}`)
+		const response = await fetch(`${this.baseUrl}${path}`, { headers: this.headers })
 		this.rateLimitReset = Date.now() + Number(response.headers.get("X-Ratelimit-Reset")) * 1000
 		this.rateLimitRemaining = Number(response.headers.get("X-Ratelimit-Remaining"))
 
