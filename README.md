@@ -4,8 +4,8 @@
   </a>
 </p>
 
-<h1 align="center" style="font-size: large;" style="display: inline;">Badges</h1>
-<h3 align="center" style="font-size: large;" style="display: inline;">a customizable badge api with the ability to fetch third-party data</h3>
+<h1 align="center">Badges</h1>
+<h3 align="center">a customizable badge api with the ability to fetch third-party data</h3>
 <br>
 
 <div align="center">
