@@ -1,8 +1,10 @@
+import fs from "fs"
 import presets from "../assets/presets.json"
 import { ApiClient } from "./api-client"
 
 const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)]/
 const NAME_REGEX = /\[(?<fill>[\w|/-]+)](?<text>(?:\\\[|[^[])+)/g
+const ICON_REGEX = /^[\w-]+$/
 
 export class BadRequestError extends Error {}
 
@@ -12,7 +14,17 @@ export class RequestParser {
 		const preset = (presets as PresetMap)[params.preset]
 
 		if (preset === undefined) {
-			throw new Error("unknown preset")
+			throw new BadRequestError("unknown preset")
+		}
+
+		for (const [key, value] of Object.entries(query)) {
+			if (Array.isArray(value)) {
+				throw new BadRequestError(`query parameter '${key}' can only be set once`)
+			}
+		}
+
+		if (query.icon !== undefined && (!ICON_REGEX.test(query.icon) || !fs.existsSync(`./assets/icons/${query.icon}.svg`))) {
+			throw new BadRequestError("unknown icon")
 		}
 
 		return {
