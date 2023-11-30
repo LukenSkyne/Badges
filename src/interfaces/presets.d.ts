@@ -24,3 +24,12 @@ interface Preset {
 interface PresetMap {
 	[key: string]: Preset
 }
+
+interface ApiTarget {
+	validation: RegExp
+	client: import("../api-client").ApiClient
+}
+
+interface ApiTargetMap {
+	[key: string]: ApiTarget
+}

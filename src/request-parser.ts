@@ -5,6 +5,20 @@ import { ApiClient } from "./api-client"
 const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)]/
 const NAME_REGEX = /\[(?<fill>[\w|/-]+)](?<text>(?:\\\[|[^[])+)/g
 const ICON_REGEX = /^[\w-]+$/
+const API_TARGETS: ApiTargetMap = {
+	modrinth: {
+		validation: /^[A-Za-z0-9]{8}$/,
+		client: ApiClient.Modrinth,
+	},
+	curseforge: {
+		validation: /^\d{1,8}$/,
+		client: ApiClient.CurseForge,
+	},
+	cfwidget: {
+		validation: /^\d{1,8}$/,
+		client: ApiClient.CFWidget,
+	},
+}
 
 export class BadRequestError extends Error {}
 
@@ -94,24 +108,23 @@ export class RequestParser {
 		let data
 
 		if (id === undefined) {
-			return "NO_PARAM"
+			throw new Error("NO_PARAM")
 		}
 
-		switch (api) {
-			case "modrinth":
-				data = await ApiClient.Modrinth.get(`/project/${id}`)
+		if (!Object.hasOwn(API_TARGETS, api)) {
+			throw new BadRequestError("unknown api")
+		}
 
-				if (data === null) {
-					return "PROJECT_NOT_FOUND"
-				}
-				break
-			case "curseforge":
-				data = await ApiClient.CurseForge.get(`/${id}`)
+		const target = API_TARGETS[api]
 
-				if (data === null) {
-					return "PROJECT_NOT_FOUND"
-				}
-				break
+		if (!target.validation.test(id)) {
+			throw new BadRequestError(`invalid ${api} id`)
+		}
+
+		data = await target.client.get(id)
+
+		if (data === null) {
+			return "PROJECT_NOT_FOUND"
 		}
 
 		for (const p of pathArr) {
