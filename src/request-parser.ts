@@ -4,6 +4,8 @@ import { ApiClient } from "./api-client"
 const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)]/
 const NAME_REGEX = /\[(?<fill>[\w|/-]+)](?<text>(?:\\\[|[^[])+)/g
 
+export class BadRequestError extends Error {}
+
 export class RequestParser {
 
 	static async process(params: Params, query: Query): Promise<Preset> {
