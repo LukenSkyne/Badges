@@ -56,7 +56,7 @@ export class RequestParser {
 
 			return {
 				fill: this.transformColor(match.groups.fill),
-				text: match.groups.text,
+				text: match.groups.text.replace("\\[", "["),
 			} satisfies Token
 		})
 	}
