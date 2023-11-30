@@ -3,8 +3,9 @@ import { CacheManager } from "./cache-manager"
 
 export class ApiClient {
 
-	static Modrinth = new ApiClient("https://api.modrinth.com/v2")
-	static CurseForge = new ApiClient("https://api.cfwidget.com")
+	static Modrinth = new ApiClient("https://api.modrinth.com/v2/project/")
+	static CurseForge = new ApiClient("https://api.curseforge.com/v1/mods/", { "x-api-key": process.env.CF_API_KEY })
+	static CFWidget = new ApiClient("https://api.cfwidget.com/")
 
 	url: string
 	headers: Headers

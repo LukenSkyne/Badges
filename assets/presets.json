@@ -17,7 +17,7 @@
 		"bg": ["2e140b", "1e0c07"],
 		"fill": "f16436",
 		"icon": "curseforge",
-		"desc": "{curseforge.downloads.total|num}[Available] on",
+		"desc": "{curseforge.data.downloadCount|num}[Available] on",
 		"name": "CurseForge"
 	},
 	"fabric": {
