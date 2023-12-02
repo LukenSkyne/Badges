@@ -39,6 +39,7 @@ server.register(async (s, _) => {
 		const canvas = await BadgeRenderer.render(preset)
 
 		reply.type("image/png")
+		reply.header("Cache-Control", `max-age=${CACHE_DURATION / 1000}, must-revalidate`)
 
 		return canvas.createPNGStream()
 	})
