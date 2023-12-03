@@ -6,6 +6,20 @@
 		"desc": "Made by",
 		"name": "Luken"
 	},
+	"bad-request": {
+		"bg": ["291818", "1a0f0f"],
+		"fill": "ff5757",
+		"icon": "exclamation",
+		"desc": "400",
+		"name": "bad request"
+	},
+	"not-found": {
+		"bg": ["292118", "1a150f"],
+		"fill": "ffb357",
+		"icon": "question",
+		"desc": "404",
+		"name": "not found"
+	},
 	"modrinth": {
 		"bg": ["072c13", "041c0b"],
 		"fill": "00d845",
