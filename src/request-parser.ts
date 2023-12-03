@@ -5,6 +5,7 @@ import { ApiClient } from "./api-client"
 const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)]/
 const NAME_REGEX = /\[(?<fill>[\w|/-]+)](?<text>(?:\\\[|[^[])+)/g
 const ICON_REGEX = /^[\w-]+$/
+const COLOR_REGEX = /^(?=[A-Fa-f0-9]*$)(?:.{3,4}|.{6}|.{8})$/
 const API_TARGETS: ApiTargetMap = {
 	modrinth: {
 		validation: /^[A-Za-z0-9]{8}$/,
@@ -60,6 +61,12 @@ export class RequestParser {
 	private static transformColor(colorFormat: string): Color {
 		const [gradient, rotation] = colorFormat.split("/")
 		const colors = gradient.split("|")
+
+		for (const col of colors) {
+			if (!COLOR_REGEX.test(col)) {
+				throw new InvalidRequestError(400, "invalid color code")
+			}
+		}
 
 		if (colors.length < 2) {
 			return colors[0]
