@@ -76,13 +76,9 @@ export class RequestParser {
 		}
 
 		return matches.map((match) => {
-			if (match.groups === undefined) {
-				throw new Error("NAME_REGEX_INVALID_MATCH")
-			}
-
 			return {
-				fill: this.transformColor(match.groups.fill),
-				text: match.groups.text.replace("\\[", "["),
+				fill: this.transformColor(match.groups!.fill),
+				text: match.groups!.text.replace("\\[", "["),
 			} satisfies Token
 		})
 	}
