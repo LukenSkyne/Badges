@@ -5,11 +5,11 @@ interface Params {
 }
 
 interface Query {
-	bg: string
-	fill: string
-	icon: string
-	desc: string
-	name: string
+	bg?: string
+	fill?: string
+	icon?: string
+	desc?: string
+	name?: string
 }
 
 type PresetRequest = import("fastify").FastifyRequest<{
