@@ -103,10 +103,6 @@ export class RequestParser {
 		const pathArr = path.split(".").slice(1)
 		let data
 
-		if (id === undefined) {
-			throw new Error("NO_PARAM")
-		}
-
 		if (!Object.hasOwn(API_TARGETS, api)) {
 			throw new BadRequestError("unknown api")
 		}
