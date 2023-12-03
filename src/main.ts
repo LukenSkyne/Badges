@@ -1,7 +1,7 @@
 import "dotenv/config"
 import fastify, { FastifyReply, FastifyRequest } from "fastify"
 import { CacheManager, CACHE_DURATION } from "./cache-manager"
-import { RequestParser, BadRequestError } from "./request-parser"
+import { RequestParser, InvalidRequestError } from "./request-parser"
 import { BadgeRenderer } from "./badge-renderer"
 
 const { HOST, PORT, BASE_URL } = process.env
@@ -29,11 +29,13 @@ server.register(async (s, _) => {
 		try {
 			preset = await RequestParser.process(request.params, request.query)
 		} catch (e: any) {
-			if (e instanceof BadRequestError) {
-				return reply.status(400).send(e.message)
-			}
+			if (!(e instanceof InvalidRequestError)) throw e
 
-			throw e
+			reply.status(e.statusCode)
+			preset = await RequestParser.process({ preset: e.statusCode === 404 ? "not-found" : "bad-request" }, {
+				desc: e.statusCode.toString(),
+				name: e.message
+			})
 		}
 
 		const canvas = await BadgeRenderer.render(preset)

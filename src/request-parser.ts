@@ -20,7 +20,14 @@ const API_TARGETS: ApiTargetMap = {
 	},
 }
 
-export class BadRequestError extends Error {}
+export class InvalidRequestError extends Error {
+	statusCode: number
+
+	constructor(statusCode: number, message: string) {
+		super(message)
+		this.statusCode = statusCode
+	}
+}
 
 export class RequestParser {
 
@@ -28,17 +35,17 @@ export class RequestParser {
 		const preset = (presets as PresetMap)[params.preset]
 
 		if (preset === undefined) {
-			throw new BadRequestError("unknown preset")
+			throw new InvalidRequestError(404, "preset not found")
 		}
 
-		for (const [key, value] of Object.entries(query)) {
+		for (const value of Object.values(query)) {
 			if (Array.isArray(value)) {
-				throw new BadRequestError(`query parameter '${key}' can only be set once`)
+				throw new InvalidRequestError(400, "duplicate query parameters")
 			}
 		}
 
 		if (query.icon !== undefined && (!ICON_REGEX.test(query.icon) || !fs.existsSync(`./assets/icons/${query.icon}.svg`))) {
-			throw new BadRequestError("unknown icon")
+			throw new InvalidRequestError(404, "icon not found")
 		}
 
 		return {
@@ -104,13 +111,13 @@ export class RequestParser {
 		let data
 
 		if (!Object.hasOwn(API_TARGETS, api)) {
-			throw new BadRequestError("unknown api")
+			throw new InvalidRequestError(404, "api not found")
 		}
 
 		const target = API_TARGETS[api]
 
 		if (!target.validation.test(id)) {
-			throw new BadRequestError(`invalid ${api} id`)
+			throw new InvalidRequestError(400, `invalid ${api} id`)
 		}
 
 		data = await target.client.get(id)
