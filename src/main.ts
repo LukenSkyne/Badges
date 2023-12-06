@@ -38,12 +38,10 @@ server.register(async (s, _) => {
 			})
 		}
 
-		const canvas = await BadgeRenderer.render(preset)
-
-		reply.type("image/png")
+		reply.type("image/svg+xml")
 		reply.header("Cache-Control", `max-age=${CACHE_DURATION / 1000}, must-revalidate`)
 
-		return canvas.createPNGStream()
+		return await BadgeRenderer.render(preset)
 	})
 }, { prefix: BASE_URL })
 
