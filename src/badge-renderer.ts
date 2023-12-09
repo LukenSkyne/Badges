@@ -95,7 +95,8 @@ export class BadgeRenderer {
 			xOff += token.metrics.width
 		}
 
-		const svg = [`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${size}">`]
+		const svg = []
+		svg.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${size}">`)
 
 		if (defs.length > 0) {
 			svg.push("<defs>")
@@ -133,7 +134,8 @@ export class BadgeRenderer {
 
 		const gradientStop = MathUtils.calculateAngledCornerIntersection(pos, dimensions, rotation)
 		const gradientStart = center.mult(2).sub(gradientStop)
-		const def = [`<linearGradient id="${id}" x1="${Math.round(gradientStart.x)}%" y1="${Math.round(gradientStart.y)}%" x2="${Math.round(gradientStop.x)}%" y2="${Math.round(gradientStop.y)}%">`]
+		const def = []
+		def.push(`<linearGradient id="${id}" x1="${Math.round(gradientStart.x)}%" y1="${Math.round(gradientStart.y)}%" x2="${Math.round(gradientStop.x)}%" y2="${Math.round(gradientStop.y)}%">`)
 
 		for (let i = 0; i < colors.length; ++i) {
 			def.push(`<stop offset="${Math.round(i / (colors.length - 1) * 100)}%" stop-color="#${colors[i]}" />`)
