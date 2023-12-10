@@ -2,6 +2,7 @@ import opentype from "opentype.js"
 import fs from "fs"
 import { MathUtils } from "./math-utils"
 import { Vec2d } from "./vec-2d"
+import { SvgBuilder } from "./svg-builder"
 
 let fontMedium: opentype.Font
 let fontExtraBold: opentype.Font
@@ -65,49 +66,69 @@ export class BadgeRenderer {
 		const strokeWidth = 2.1 * scale
 		const cornerRadius = margin
 
-		const defs = []
-		const elems = []
+		const svg = SvgBuilder.svg()
+			.width(width)
+			.height(size)
+
+		const defs = SvgBuilder.defs()
+		svg.append(defs)
 
 		const bgHasGradient = typeof(preset.bg) !== "string"
-		elems.push(`<rect fill="${bgHasGradient ? "url(#bg)" : "#" + preset.bg}" width="${width}" height="${size}" rx="${cornerRadius}" ry="${cornerRadius}"/>`)
 
 		if (bgHasGradient) {
-			defs.push(BadgeRenderer.buildGradient(preset.bg, "bg"))
+			defs.append(BadgeRenderer.buildGradient(preset.bg, "bg"))
 		}
 
-		elems.push(`<rect x="${strokeWidth * 0.5}" y="${strokeWidth * 0.5}" width="${width - strokeWidth}" height="${size - strokeWidth}" fill="none" stroke="#ffffff26" stroke-width="${strokeWidth}" rx="${cornerRadius - strokeWidth * 0.5}" ry="${cornerRadius - strokeWidth * 0.5}"/>`)
-		elems.push(`<image href="${iconEncoded}" x="${margin}" y="${gap + Math.round((iconSize - iconHeight) * 0.5)}" width="${iconWidth}" height="${iconHeight}"></image>`)
-		elems.push(`<path d="${pathData}" fill="#f8f8f8"/>`)
+		svg.append(
+			SvgBuilder.rect()
+				.fill(bgHasGradient ? "url(#bg)" : "#" + preset.bg)
+				.width(width)
+				.height(size)
+				.radius(cornerRadius)
+		)
+		svg.append(
+			SvgBuilder.rect()
+				.pos(strokeWidth * 0.5)
+				.width(width - strokeWidth)
+				.height(size - strokeWidth)
+				.fill("none")
+				.stroke("#ffffff26", strokeWidth)
+				.radius(cornerRadius - strokeWidth * 0.5)
+		)
+		svg.append(
+			SvgBuilder.image()
+				.href(iconEncoded)
+				.pos(margin, gap + Math.round((iconSize - iconHeight) * 0.5))
+				.width(iconWidth)
+				.height(iconHeight)
+		)
+		svg.append(
+			SvgBuilder.path()
+				.data(pathData)
+				.fill("#f8f8f8")
+		)
 
 		let xOff = descOffX + gap + Math.round(metrics.width)
 
 		for (const [i, token] of tokens.entries()) {
 			const tokPath = fontExtraBold.getPath(token.text, xOff, size * 0.5 + metrics2.height / 4 - 0.5, fontSize)
 			const tokPathData = tokPath.toPathData(2)
-
 			const tokHasGradient = typeof(token.fill) !== "string"
-			elems.push(`<path d="${tokPathData}" fill="${tokHasGradient ? "url(#f" + i + ")" : "#" + token.fill}"/>`)
 
 			if (tokHasGradient) {
-				defs.push(BadgeRenderer.buildGradient(token.fill, "f" + i))
+				defs.append(BadgeRenderer.buildGradient(token.fill, "f" + i))
 			}
+
+			svg.append(
+				SvgBuilder.path()
+					.data(tokPathData)
+					.fill(tokHasGradient ? `url(#f${i})` : "#" + token.fill)
+			)
 
 			xOff += token.metrics.width
 		}
 
-		const svg = []
-		svg.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${size}">`)
-
-		if (defs.length > 0) {
-			svg.push("<defs>")
-			svg.push(...defs)
-			svg.push("</defs>")
-		}
-
-		svg.push(...elems)
-		svg.push("</svg>")
-
-		return svg.join("")
+		return svg.get()
 	}
 
 	private static measureText(font: opentype.Font, fontSize: number, text: string) {
@@ -134,15 +155,16 @@ export class BadgeRenderer {
 
 		const gradientStop = MathUtils.calculateAngledCornerIntersection(pos, dimensions, rotation)
 		const gradientStart = center.mult(2).sub(gradientStop)
-		const def = []
-		def.push(`<linearGradient id="${id}" x1="${Math.round(gradientStart.x)}%" y1="${Math.round(gradientStart.y)}%" x2="${Math.round(gradientStop.x)}%" y2="${Math.round(gradientStop.y)}%">`)
+
+		const gradient = SvgBuilder.linearGradient()
+			.id(id)
+			.posEx(Math.round(gradientStart.x), Math.round(gradientStart.y), "1", "%")
+			.posEx(Math.round(gradientStop.x), Math.round(gradientStop.y), "2", "%")
 
 		for (let i = 0; i < colors.length; ++i) {
-			def.push(`<stop offset="${Math.round(i / (colors.length - 1) * 100)}%" stop-color="#${colors[i]}" />`)
+			gradient.appendStop(Math.round(i / (colors.length - 1) * 100), "#" + colors[i])
 		}
 
-		def.push(`</linearGradient>`)
-
-		return def.join("")
+		return gradient.get()
 	}
 }
