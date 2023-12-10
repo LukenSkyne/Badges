@@ -10,7 +10,7 @@
 
 <div align="center">
 
-<a href="https://luken.cc/badges/custom?icon=github&bg=00171c|0a1209|100f06|1a0000/100&desc=Taste%20the&name=[5991ee|56ab6c|f5d26a|eb786f/135]Rainbow">![Custom Badge](https://luken.cc/badges/custom?icon=github&bg=00171c|0a1209|100f06|1a0000/100&desc=Taste%20the&name=[5991ee|56ab6c|f5d26a|eb786f/135]Rainbow)</a>
+<a href="https://luken.cc/badges/custom?icon=github&bg=00171c|0a1209|100f06|1a0000/100&desc=Taste%20the&name=[5991ee|56ab6c|f5d26a|eb786f/160]Rainbow">![Custom Badge](https://luken.cc/badges/custom?icon=github&bg=00171c|0a1209|100f06|1a0000/100&desc=Taste%20the&name=[5991ee|56ab6c|f5d26a|eb786f/160]Rainbow)</a>
 
 </div>
 
@@ -46,13 +46,13 @@ The following query parameters can be set:
   * add gradient colors by dividing with `|`, such as `rgb|rgb|rgb`
   * rotate the gradient by adding `/angle`, such as `rgb|rgb/45`
 * `fill` sets the default icon and text colors (only supports single color)
-* `icon` selects an icon by name, found in the [icons](./assets/icons) folder
+* `icon` specifies an icon by name (found in the [icons](./assets/icons) folder) or [url encoded](https://www.urlencoder.org/) svg data
 * `desc` changes the description text and allows for data fetching
   * limited API support, currently only CurseForge & Modrinth for project information
   * syntax: `{api.json_path|formatter}[Alternate Text] more text`
     * api can be one of `curseforge`, `modrinth`
     * alternate text is shown when the `/<id>` parameter is not used
-    * formatter is optionally used for numbers, can be `|num` or omitted
+    * formatter is optionally used for numbers, can be `num` or omitted
 * `name` overrides the highlighted name on the right
   * can have multiple segments of differently colored text
   * syntax: `[rgb|rgb/45]Text1[rgb]Text2`
