@@ -2,7 +2,7 @@ import fs from "fs"
 import presets from "../assets/presets.json"
 import { ApiClient } from "./api-client"
 
-const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)]/
+const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w*))?}\[(?<fallback>\w*)]/
 const VIEWBOX_REGEX = /viewBox\s*=\s*"\s*([\d.-]+)\s*([\d.-]+)\s*([\d.-]+)\s*([\d.-]+)\s*"/
 const NAME_REGEX = /\[(?<fill>[\w|/-]+)](?<text>(?:\\\[|[^[])+)/g
 const COLOR_REGEX = /^(?=[A-Fa-f0-9]*$)(?:.{3,4}|.{6}|.{8})$/
@@ -174,9 +174,11 @@ export class RequestParser {
 			case "num": {
 				return this.formatNumber(input)
 			}
+			case "":
+				throw new InvalidRequestError(400, "invalid formatter name")
+			default:
+				throw new InvalidRequestError(404, "unknown formatter name")
 		}
-
-		return input
 	}
 
 	private static formatNumber(num: number) {
