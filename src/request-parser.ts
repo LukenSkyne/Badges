@@ -56,25 +56,28 @@ export class RequestParser {
 	}
 
 	private static transformIcon(icon: string): Icon {
-		if (!ICON_REGEX.test(icon)) {
-			throw new InvalidRequestError(400, "invalid icon name")
+		if (icon.length < 64) {
+			if (!ICON_REGEX.test(icon)) {
+				throw new InvalidRequestError(400, "invalid icon name")
+			}
+
+			const path = `./assets/icons/${icon}.svg`
+
+			if (!fs.existsSync(path)) {
+				throw new InvalidRequestError(404, "icon not found")
+			}
+
+			icon = fs.readFileSync(path, "utf8")
 		}
 
-		const path = `./assets/icons/${icon}.svg`
-
-		if (!fs.existsSync(path)) {
-			throw new InvalidRequestError(404, "icon not found")
-		}
-
-		const rawIcon = fs.readFileSync(path, "utf8")
-		const viewBoxMatch = RegExp(VIEWBOX_REGEX).exec(rawIcon)
+		const viewBoxMatch = RegExp(VIEWBOX_REGEX).exec(icon)
 
 		if (viewBoxMatch === null) {
 			throw new InvalidRequestError(400, "svg viewbox missing")
 		}
 
 		return {
-			content: rawIcon,
+			content: icon,
 			width: Number(viewBoxMatch[3]) - Number(viewBoxMatch[1]),
 			height: Number(viewBoxMatch[4]) - Number(viewBoxMatch[2]),
 		}
