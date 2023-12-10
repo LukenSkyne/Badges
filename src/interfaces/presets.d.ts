@@ -13,16 +13,26 @@ interface Token {
 
 type Name = string | Token[]
 
+interface Icon {
+	content: string
+	width: number
+	height: number
+}
+
 interface Preset {
 	bg: Color
 	fill: string
-	icon: string
+	icon: Icon
 	desc: string
 	name: Name
 }
 
+interface PresetJson extends Preset {
+	icon: string
+}
+
 interface PresetMap {
-	[key: string]: Preset
+	[key: string]: PresetJson
 }
 
 interface ApiTarget {

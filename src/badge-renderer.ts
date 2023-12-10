@@ -1,7 +1,6 @@
 import opentype from "opentype.js"
-import fs from "fs"
-import { MathUtils } from "./math-utils"
 import { Vec2d } from "./vec-2d"
+import { MathUtils } from "./math-utils"
 import { SvgBuilder } from "./svg-builder"
 
 let fontMedium: opentype.Font
@@ -23,20 +22,10 @@ export class BadgeRenderer {
 		const fontSize = 17 * scale
 		const iconSize = size - (gap * 2)
 
-		let iconRaw = fs.readFileSync(`./assets/icons/${preset.icon}.svg`, "utf8")
-		iconRaw = iconRaw.replace(/currentColor/g, `#${preset.fill}`)
+		const iconRaw = preset.icon.content.replace(/currentColor/g, `#${preset.fill}`)
 		const iconEncoded = "data:image/svg+xml;base64," + Buffer.from(iconRaw).toString("base64")
-
-		const viewBoxRegex = /viewBox\s*=\s*"\s*([\d.-]+)\s*([\d.-]+)\s*([\d.-]+)\s*([\d.-]+)\s*"/
-		const viewBoxMatch = RegExp(viewBoxRegex).exec(iconRaw)
-
-		if (viewBoxMatch === null) {
-			throw new Error("no viewbox found")
-		}
-
-		let iconWidth = Number(viewBoxMatch[3]) - Number(viewBoxMatch[1])
-		let iconHeight = Number(viewBoxMatch[4]) - Number(viewBoxMatch[2])
-
+		let iconWidth = preset.icon.width
+		let iconHeight = preset.icon.height
 		const mult = iconSize / Math.max(iconWidth, iconHeight)
 		iconWidth *= mult
 		iconHeight *= mult

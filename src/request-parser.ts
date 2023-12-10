@@ -3,9 +3,10 @@ import presets from "../assets/presets.json"
 import { ApiClient } from "./api-client"
 
 const DESCRIPTION_REGEX = /{(?<api>\w+)(?<path>[.\w]+)?(?:\|(?<formatter>\w+))?}\[(?<fallback>\w*)]/
+const VIEWBOX_REGEX = /viewBox\s*=\s*"\s*([\d.-]+)\s*([\d.-]+)\s*([\d.-]+)\s*([\d.-]+)\s*"/
 const NAME_REGEX = /\[(?<fill>[\w|/-]+)](?<text>(?:\\\[|[^[])+)/g
-const ICON_REGEX = /^[\w-]+$/
 const COLOR_REGEX = /^(?=[A-Fa-f0-9]*$)(?:.{3,4}|.{6}|.{8})$/
+const ICON_REGEX = /^[\w-]+$/
 const API_TARGETS: ApiTargetMap = {
 	modrinth: {
 		validation: /^[A-Za-z0-9]{8}$/,
@@ -45,16 +46,37 @@ export class RequestParser {
 			}
 		}
 
-		if (query.icon !== undefined && (!ICON_REGEX.test(query.icon) || !fs.existsSync(`./assets/icons/${query.icon}.svg`))) {
-			throw new InvalidRequestError(404, "icon not found")
-		}
-
 		return {
 			bg: query.bg !== undefined ? this.transformColor(query.bg) : preset.bg,
-			icon: query.icon ?? preset.icon,
+			icon: this.transformIcon(query.icon ?? preset.icon),
 			fill: query.fill ?? preset.fill,
 			desc: await this.transformDescription(query.desc ?? preset.desc, params.id),
 			name: query.name !== undefined ? this.transformName(query.name) : preset.name,
+		}
+	}
+
+	private static transformIcon(icon: string): Icon {
+		if (!ICON_REGEX.test(icon)) {
+			throw new InvalidRequestError(400, "invalid icon name")
+		}
+
+		const path = `./assets/icons/${icon}.svg`
+
+		if (!fs.existsSync(path)) {
+			throw new InvalidRequestError(404, "icon not found")
+		}
+
+		const rawIcon = fs.readFileSync(path, "utf8")
+		const viewBoxMatch = RegExp(VIEWBOX_REGEX).exec(rawIcon)
+
+		if (viewBoxMatch === null) {
+			throw new InvalidRequestError(400, "svg viewbox missing")
+		}
+
+		return {
+			content: rawIcon,
+			width: Number(viewBoxMatch[3]) - Number(viewBoxMatch[1]),
+			height: Number(viewBoxMatch[4]) - Number(viewBoxMatch[2]),
 		}
 	}
 
