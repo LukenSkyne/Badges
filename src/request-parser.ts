@@ -58,8 +58,8 @@ export class RequestParser {
 		}
 	}
 
-	private static transformColor(colorFormat: string): Color {
-		const [gradient, rotation] = colorFormat.split("/")
+	private static transformColor(color: string): Color {
+		const [gradient, rotation] = color.split("/")
 		const colors = gradient.split("|")
 
 		for (const col of colors) {
