@@ -15,49 +15,44 @@ export class BadgeRenderer {
 		}
 
 		const scale = 1
-
-		const size = 40 * scale
 		const gap = 6 * scale
 		const margin = 8 * scale
+		const height = 40 * scale
 		const fontSize = 17 * scale
-		const iconSize = size - (gap * 2)
+		const strokeWidth = 2.1 * scale
 
 		const iconRaw = preset.icon.content.replace(/currentColor/g, `#${preset.fill}`)
 		const iconEncoded = "data:image/svg+xml;base64," + Buffer.from(iconRaw).toString("base64")
 		let iconWidth = preset.icon.width
 		let iconHeight = preset.icon.height
+		const iconSize = height - (gap * 2)
 		const mult = iconSize / Math.max(iconWidth, iconHeight)
 		iconWidth *= mult
 		iconHeight *= mult
 
-		const text = preset.desc
-		const text2 = Array.isArray(preset.name) ? preset.name.map((tok) => tok.text).join("") : preset.name
+		const desc = preset.desc
+		const descMetrics = BadgeRenderer.measureText(fontMedium, fontSize, desc)
+		let nameWidth = 0
+		const tokens = preset.name.map((tok) => {
+			const metrics = BadgeRenderer.measureText(fontExtraBold, fontSize, tok.text)
+			nameWidth += metrics.width
 
-		const tokens = Array.isArray(preset.name) ? preset.name.map((tok) => ({
-			text: tok.text,
-			fill: tok.fill,
-			metrics: BadgeRenderer.measureText(fontExtraBold, fontSize, tok.text),
-		})) : [{
-			text: preset.name,
-			fill: preset.fill,
-			metrics: BadgeRenderer.measureText(fontExtraBold, fontSize, text2),
-		}]
+			return {
+				text: tok.text,
+				fill: tok.fill,
+				metrics,
+			}
+		})
 
-		const metrics = BadgeRenderer.measureText(fontMedium, fontSize, text)
-		const metrics2 = BadgeRenderer.measureText(fontExtraBold, fontSize, text2)
+		const width = margin + iconWidth + gap + Math.round(descMetrics.width) + gap + Math.round(nameWidth) + margin
+		const descOffset = margin + iconWidth + gap
 
-		const width = margin + iconWidth + gap + Math.round(metrics.width) + gap + Math.round(metrics2.width) + margin
-		const descOffX = margin + iconWidth + gap
-
-		const path = fontMedium.getPath(text, descOffX, size * 0.5 + metrics.height / 4 - 0.5, fontSize)
+		const path = fontMedium.getPath(desc, descOffset, height * 0.5 + descMetrics.height / 4 - 0.5, fontSize)
 		const pathData = path.toPathData(2)
-
-		const strokeWidth = 2.1 * scale
-		const cornerRadius = margin
 
 		const svg = SvgBuilder.svg()
 			.width(width)
-			.height(size)
+			.height(height)
 
 		const defs = SvgBuilder.defs()
 		svg.append(defs)
@@ -72,17 +67,17 @@ export class BadgeRenderer {
 			SvgBuilder.rect()
 				.fill(bgHasGradient ? "url(#bg)" : "#" + preset.bg)
 				.width(width)
-				.height(size)
-				.radius(cornerRadius)
+				.height(height)
+				.radius(margin)
 		)
 		svg.append(
 			SvgBuilder.rect()
 				.pos(strokeWidth * 0.5)
 				.width(width - strokeWidth)
-				.height(size - strokeWidth)
+				.height(height - strokeWidth)
 				.fill("none")
 				.stroke("#ffffff26", strokeWidth)
-				.radius(cornerRadius - strokeWidth * 0.5)
+				.radius(margin - strokeWidth * 0.5)
 		)
 		svg.append(
 			SvgBuilder.image()
@@ -97,10 +92,10 @@ export class BadgeRenderer {
 				.fill("#f8f8f8")
 		)
 
-		let xOff = descOffX + gap + Math.round(metrics.width)
+		let tokenOffset = descOffset + gap + Math.round(descMetrics.width)
 
 		for (const [i, token] of tokens.entries()) {
-			const tokPath = fontExtraBold.getPath(token.text, xOff, size * 0.5 + metrics2.height / 4 - 0.5, fontSize)
+			const tokPath = fontExtraBold.getPath(token.text, tokenOffset, height * 0.5 + token.metrics.height / 4 - 0.5, fontSize)
 			const tokPathData = tokPath.toPathData(2)
 			const tokHasGradient = typeof(token.fill) !== "string"
 
@@ -114,7 +109,7 @@ export class BadgeRenderer {
 					.fill(tokHasGradient ? `url(#f${i})` : "#" + token.fill)
 			)
 
-			xOff += token.metrics.width
+			tokenOffset += token.metrics.width
 		}
 
 		return svg.get()

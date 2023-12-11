@@ -11,8 +11,6 @@ interface Token {
 	fill: Color
 }
 
-type Name = string | Token[]
-
 interface Icon {
 	content: string
 	width: number
@@ -24,11 +22,12 @@ interface Preset {
 	fill: string
 	icon: Icon
 	desc: string
-	name: Name
+	name: Token[]
 }
 
 interface PresetJson extends Preset {
 	icon: string
+	name: string | Token[]
 }
 
 interface PresetMap {

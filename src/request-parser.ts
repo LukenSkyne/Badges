@@ -46,12 +46,14 @@ export class RequestParser {
 			}
 		}
 
+		const fill = query.fill ?? preset.fill
+
 		return {
 			bg: query.bg !== undefined ? this.transformColor(query.bg) : preset.bg,
 			icon: this.transformIcon(query.icon ?? preset.icon),
-			fill: query.fill ?? preset.fill,
+			fill,
 			desc: await this.transformDescription(query.desc ?? preset.desc, params.id),
-			name: query.name !== undefined ? this.transformName(query.name) : preset.name,
+			name: this.transformName(query.name ?? preset.name, fill)
 		}
 	}
 
@@ -107,18 +109,25 @@ export class RequestParser {
 		}
 	}
 
-	private static transformName(name: string): Name {
+	private static transformName(name: string | Token[], fill: string): Token[] {
+		if (Array.isArray(name)) {
+			return name
+		}
+
 		const matches = [...name.matchAll(NAME_REGEX)]
 
 		if (matches.length === 0) {
-			return name
+			return [{
+				text: name,
+				fill,
+			}]
 		}
 
 		return matches.map((match) => {
 			return {
-				fill: this.transformColor(match.groups!.fill),
 				text: match.groups!.text.replace("\\[", "["),
-			} satisfies Token
+				fill: this.transformColor(match.groups!.fill),
+			}
 		})
 	}
 
