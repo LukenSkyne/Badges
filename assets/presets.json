@@ -48,6 +48,13 @@
 		"desc": "Available for",
 		"name": "Forge"
 	},
+	"neoforge": {
+		"bg": ["2e180b", "1f0f07"],
+		"fill": "f99e6b",
+		"icon": "neoforge",
+		"desc": "Available for",
+		"name": "NeoForge"
+	},
 	"environment": {
 		"bg": ["4a0c16", "20060b"],
 		"fill": "c92a45",
