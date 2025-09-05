@@ -9,3 +9,7 @@ node_modules/
 
 # compilation output
 dist/
+
+# Visual Studio Code settings
+.vscode
+

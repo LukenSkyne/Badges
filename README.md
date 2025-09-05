@@ -34,6 +34,8 @@ The CurseForge and Modrinth badges can also show the download count of your proj
 
 <a href="https://luken.cc/badges/curseforge/734339">![CurseForge](https://luken.cc/badges/curseforge/734339)</a> <a href="https://luken.cc/badges/modrinth/QQXAdCzh">![Modrinth](https://luken.cc/badges/modrinth/QQXAdCzh)</a>
 
+<!-- TODO: Create badge with Duolingo API -->
+
 
 ## How to use
 
