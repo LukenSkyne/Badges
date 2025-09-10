@@ -3,17 +3,20 @@ import { CacheManager } from "./cache-manager"
 
 export class ApiClient {
 
-	static Modrinth = new ApiClient("https://api.modrinth.com/v2/project/")
-	static CurseForge = new ApiClient("https://api.curseforge.com/v1/mods/", { "x-api-key": process.env.CF_API_KEY })
-	static CFWidget = new ApiClient("https://api.cfwidget.com/")
+	static Modrinth = new ApiClient((id) => `https://api.modrinth.com/v2/project/${id}`)
+	static CurseForge = new ApiClient((id) => `https://api.curseforge.com/v1/mods/${id}`, { "x-api-key": process.env.CF_API_KEY })
+	static CFWidget = new ApiClient((id) => `https://api.cfwidget.com/${id}`)
+	static Duolingo = new ApiClient((id) => `https://www.duolingo.com/2017-06-30/users?username=${id}&fields=streak,streakData%7BcurrentStreak,previousStreak%7D%7D`)
 
-	url: string
+	/** Url builder takes the user id and returns the url string */
+	urlBuilder: (id: string) => string;
 	headers: Headers
 	rateLimitReset: number | null
 	rateLimitRemaining: number | null
 
-	constructor(url: string, headers?: object) {
-		this.url = url
+	constructor(urlBuilder: (id: string) => string, headers?: object) {
+		this.urlBuilder = urlBuilder
+
 		this.headers = new Headers({
 			"Content-Type": "application/json",
 			"Accept": "application/json",
@@ -24,8 +27,9 @@ export class ApiClient {
 		this.rateLimitRemaining = null
 	}
 
-	async get(path: string) {
-		const fullPath = this.url + path
+	async get(id: string) {
+		const fullPath = this.urlBuilder(id)
+
 		const cachedResult = CacheManager.get(fullPath)
 
 		if (cachedResult !== null) {
