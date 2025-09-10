@@ -34,7 +34,9 @@ The CurseForge and Modrinth badges can also show the download count of your proj
 
 <a href="https://luken.cc/badges/curseforge/734339">![CurseForge](https://luken.cc/badges/curseforge/734339)</a> <a href="https://luken.cc/badges/modrinth/QQXAdCzh">![Modrinth](https://luken.cc/badges/modrinth/QQXAdCzh)</a>
 
-<!-- TODO: Create badge with Duolingo API -->
+The same logic applies to the Duolingo badge showing days of streak of your username by appending `/<username>` to the URL.
+
+<a href="https://luken.cc/badges/duolingo/bernborgess">![Duolingo](https://luken.cc/badges/duolingo/bernborgess)</a>
 
 
 ## How to use
