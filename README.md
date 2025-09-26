@@ -40,6 +40,10 @@ The CurseForge and Modrinth badges can also show the download count of your proj
 The api currently has a single endpoint which is used to retrieve badges: `https://luken.cc/badges/<preset>`  
 A basic preset to start with your own customizations is `custom`, but you can simply override any of them.
 
+> [!NOTE]
+> Please keep in mind that I'm only hosting the API for preview purposes. I do not guarantee availability.  
+> If you want to use the badges, I recommend self-hosting it.
+
 The following query parameters can be set:
 * `bg` adjusts the background
   * supply a single color with `rgb`
