@@ -20,6 +20,10 @@ const API_TARGETS: ApiTargetMap = {
 		validation: /^\d{1,8}$/,
 		client: ApiClient.CFWidget,
 	},
+	duolingo: {
+		validation: /^\w*$/,
+		client: ApiClient.Duolingo,
+	}
 }
 
 export class InvalidRequestError extends Error {
@@ -182,6 +186,9 @@ export class RequestParser {
 		switch (formatter) {
 			case "num": {
 				return this.formatNumber(input)
+			}
+			case "days": {
+				return input + " days";
 			}
 			case "":
 				throw new InvalidRequestError(400, "invalid formatter name")
