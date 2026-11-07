@@ -116,5 +116,12 @@
 				"fill": "00A4EE"
 			}
 		]
+	},
+	"duolingo": {
+		"bg": ["072c13", "041c0b"],
+		"fill": "58CC02",
+		"icon": "duolingo",
+		"desc": "{duolingo.users.0.streakData.currentStreak.length|days}[] on",
+		"name": "Duolingo"
 	}
 }
